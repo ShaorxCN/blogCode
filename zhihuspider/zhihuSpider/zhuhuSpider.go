@@ -9,7 +9,6 @@ import (
 	//"github.com/it512/sqlt"
 	//"github.com/jmoiron/sqlx"
 	"database/sql"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -76,8 +75,6 @@ func (s *zhihuSpider) GetHtml() {
 	}
 
 	defer resp.Body.Close()
-	by, _ := ioutil.ReadAll(resp.Body)
-	log.Println(string(by))
 	s.document, _ = goquery.NewDocument(s.url)
 
 	log.Printf("get html from url:%s end ", s.url)
