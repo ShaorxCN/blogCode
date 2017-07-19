@@ -192,6 +192,5 @@ func ptl(t *binaryTree) string {
 	r := t.root
 
 	toptl(r, b)
-	log.Println(b.String())
 	return b.String()
 }
