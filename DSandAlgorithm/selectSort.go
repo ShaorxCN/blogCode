@@ -5,7 +5,7 @@ import "log"
 
 func selectMinKey(a []int,start int) int{
 
-	for i := start+1;i<len(a)-1;i++{
+	for i := start+1;i<len(a);i++{
 		if a[start] > a[i]{
 			start = i
 		}
@@ -20,7 +20,7 @@ func selectMinKey(a []int,start int) int{
 
 func selectSort(a []int){
 
-	for i :=0;i<len(a);i++{
+	for i :=0;i<len(a)-1;i++{
 		min := selectMinKey(a,i)
 
 
