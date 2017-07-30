@@ -1,92 +1,122 @@
 package main
 
+//这里都是基础版本，可以选择整理优化比如选择可以二分，快速可以在low == high的时候再交换基准值和low位置的值等
+
 import "log"
 
-func selectMin(a []int, min int) int {
-	for i := min+1; i < len(a); i++ {
-		if a[min] > a[i] {
-			min = i
-		}
-	}
-	return min
-}
 
-func getStv(a []int, low, high int) int {
-	//默认第一个元素是基准元素
-	stV := a[low]
-	for low < high {
-		for low < high && a[high] >= stV {
-			high--
-		}
-
-		a[low], a[high] = a[high], a[low]
-
-		for low < high && a[low] <= stV {
-			low++
-		}
-
-		a[low], a[high] = a[high], a[low]
-	}
-
-	return low
-}
-
-func quickSort(a []int, low, high int) {
-	if low < high {
-		st := getStv(a, low, high)
-
-		quickSort(a, low, st-1)
-		quickSort(a, st+1, high)
-	}
-}
-
-func main() {
-	//bubble
-	s := []int{3, 1, 54, 6, 12, 6, 1, 88, 32}
+func bubbleSort(a []int){
+	log.Printf("before bubble sort:%v\n",a)
+	
+	todo := make([]int,len(a))
+	copy(todo,a)
+	
 	change := true
-	for i := 0; i < len(s)-1 && change; i++ {
+	for i := 0;i<len(todo)-1&&change;i++{
 		change = false
-		for j := 0; j < len(s)-i-1; j++ {
-
-			if s[j] > s[j+1] {
-				s[j], s[j+1] = s[j+1], s[j]
+		for  j:=0;j<len(todo)-i-1;j++{
+			if todo[j] > todo[j+1]{
 				change = true
+				todo[j],todo[j+1] = todo[j+1],todo[j]
+			}
+		}
+	
+	}
+	
+	log.Printf("after bubble sort:%v\n",todo)
+
+}
+
+
+func selectSort(a []int){
+	log.Printf("before select sort:%v\n",a)
+	
+	todo := make([]int,len(a))
+	copy(todo,a)
+	
+	for i:=0;i<len(todo)-1;i++{
+		for j:=i+1;j<len(todo);j++{
+			if todo[j]<todo[i]{
+				todo[j],todo[i] = todo[i],todo[j]
 			}
 		}
 	}
+	
+	log.Printf("after select sort:%v\n",todo)
+}
 
-	log.Println(s)
 
-	//insert
-	s1 := []int{3, 1, 54, 6, 12, 6, 1, 88, 32}
-	for i := 1; i < len(s1); i++ {
-		for j := i; j > 0 && s1[j] < s1[j-1]; j-- {
-			s1[j], s1[j-1] = s1[j-1], s1[j]
+func insertSort(a []int){
+	log.Printf("before insert sort:%v\n",a)
+	
+	todo := make([]int,len(a))
+	copy(todo,a)
+	
+	for i:=1;i<len(todo);i++{
+		for j:=i;j>0&&todo[j]<todo[j-1];j--{
+			todo[j],todo[j-1] = todo[j-1],todo[j]
 		}
 	}
-	log.Println(s1)
+	
+	log.Printf("after insert sort:%v\n",todo)
+}
 
-	//select
-	s2 := []int{3, 1, 54, 6, 12, 6, 1, 88, 32}
 
-	for i := 0; i < len(s2)-1; i++ {
-		min := selectMin(s2, i)
-
-		if min != i {
-			s2[min], s2[i] = s2[i], s2[min]
+func getStp(todo []int,low,high int)int{
+	stv := todo[low]
+	
+	for low <high{
+		for low < high&&todo[high]>=stv{
+			high--
 		}
+		
+		
+		todo[high],todo[low] = todo[low],todo[high]
+		
+		
+		for low < high&&todo[low]<=stv{
+			low++
+		}
+		
+		
+		todo[low],todo[high] = todo[high],todo[low]
+		
 	}
+	
+	return low
+}
 
-	log.Println(s2)
+func quicksort(todo []int,low,high int){
+	if low<high{
+		stp := getStp(todo,low,high)
+		quicksort(todo,low,stp-1)
+		quicksort(todo,stp+1,high)
+	
+	}
+}
 
-	//quick
-	s3 := []int{3, 1, 54, 6, 12, 6, 1, 88, 32}
+func quickSort(a []int){
+	log.Printf("before quick sort:%v\n",a)
+	
+	todo := make([]int,len(a))
+	copy(todo,a)
+	
+	low,high := 0,len(todo)-1
+	
+	quicksort(todo,low,high)
+	
+	log.Printf("after quick sort:%v\n",todo)
+}
 
-	low, high := 0, len(s3)-1
 
-	quickSort(s3, low, high)
-
-	log.Println(s3)
-
-
+func main(){
+	s := []int{2,3,41,3,66,7,11,8,11,4,55}
+	
+	
+	
+	bubbleSort(s)
+	selectSort(s)
+	insertSort(s)
+	quickSort(s)
+	
 }
