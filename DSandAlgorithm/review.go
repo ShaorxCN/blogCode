@@ -69,7 +69,7 @@ func main() {
 	//select
 	s2 := []int{3, 1, 54, 6, 12, 6, 1, 88, 32}
 
-	for i := 0; i < len(s2); i++ {
+	for i := 0; i < len(s2)-1; i++ {
 		min := selectMin(s2, i)
 
 		if min != i {
@@ -88,6 +88,5 @@ func main() {
 
 	log.Println(s3)
 
-	log.Println(^2)
 
 }
