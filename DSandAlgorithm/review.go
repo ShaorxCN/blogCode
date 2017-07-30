@@ -3,7 +3,7 @@ package main
 import "log"
 
 func selectMin(a []int, min int) int {
-	for i := min; i < len(a); i++ {
+	for i := min+1; i < len(a); i++ {
 		if a[min] > a[i] {
 			min = i
 		}
