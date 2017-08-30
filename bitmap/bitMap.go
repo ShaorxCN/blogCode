@@ -2,6 +2,7 @@ package bitmap
 
 import (
 	"fmt"
+	"sync"
 )
 
 const (
@@ -17,18 +18,20 @@ type bitMap struct {
 	maxSize uint64
 	//已经置位的最大值,方便后面的输出
 	max uint64
+
+	lock sync.RWMutex
 }
 
 //越界错误
-type OutOfRange struct{
+type OutOfRange struct {
 	message string
 }
 
-func (o *OutOfRange)Error() string{
+func (o *OutOfRange) Error() string {
 	return o.message
 }
 
-func New()*bitMap{
+func New() *bitMap {
 	return NewWithMaxSize(MaxSize)
 }
 
@@ -47,43 +50,43 @@ func NewWithMaxSize(maxSize int) *bitMap {
 }
 
 //非0置1,暂不支持链式
-func (b *bitMap)SetValue(offset uint64,value int)error{
-	if b.maxSize < offset{
-		return &OutOfRange{message:"index out of range"}
+func (b *bitMap) SetValue(offset uint64, value int) error {
+	if b.maxSize < offset {
+		return &OutOfRange{message: "index out of range"}
 	}
 	//获取需要set的值的下标以及byte中的第几位
-	index,pos := offset/8,offset%8
+	index, pos := offset/8, offset%8
 
 	//置零
-	if value == 0{
+	b.lock.Lock()
+	defer b.lock.Unlock()
+	if value == 0 {
 		b.value[index] &^= 0x01 << pos
-	}else{
+	} else {
 		b.value[index] |= 0x01 << pos
 	}
 
-	if b.max < offset{
+	if b.max < offset {
 		b.max = offset
 	}
 
 	return nil
 }
 
-
-func(b *bitMap)GetBit(offset uint64) (uint8,error){
-	if b.maxSize < offset{
-		return 0,&OutOfRange{message:"index out of range"}
+func (b *bitMap) GetBit(offset uint64) (uint8, error) {
+	if b.maxSize < offset {
+		return 0, &OutOfRange{message: "index out of range"}
 	}
 
 	//获取需要get的值的下标以及byte中的第几位
-	index,pos := offset/8,offset%8
-
-	return (b.value[index]>>pos)&0x01,nil
+	index, pos := offset/8, offset%8
+	b.lock.RLock()
+	defer b.lock.RUnlock()
+	return (b.value[index] >> pos) & 0x01, nil
 }
 
 //不过数据量大改为输出最大值以及位置
 //todo
-func (b *bitMap)String()string{
-	return fmt.Sprintf("max : %d;",b.max)
+func (b *bitMap) String() string {
+	return fmt.Sprintf("max : %d;", b.max)
 }
-
-
