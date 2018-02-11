@@ -85,7 +85,7 @@ func (h *HashRing) AddNodes(weights map[string]int) error {
 	h.RWMux.Lock()
 	defer h.RWMux.Unlock()
 	for k, v := range weights {
-		if _, ok := h.weights[k]; ok {
+		if _, ok := h.weights[k]; !ok {
 			return errors.New(fmt.Sprintf("nodeKey : %s is existed\n", k))
 		}
 
