@@ -53,16 +53,3 @@ func GetStepNumWithClosure(n int)(int ,error){
 	return num,nil
 }
 
-
-// return func(n int){
-// 	defer func(){
-// 		d = n
-// 	}
-// 	return d+n
-// }
-
-// func getStepNumWithClosure(n int)int{
-// 	for i := 0;i<n;i++{
-
-// 	}
-// }
