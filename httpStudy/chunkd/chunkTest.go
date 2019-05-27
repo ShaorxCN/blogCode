@@ -36,11 +36,7 @@ func parseRequestLine(line string) (method, requestURI, proto string, ok bool) {
 	return line[:s1], line[s1+1 : s2], line[s2+1:], true
 }
 
-var ress = []string{`<html><title>Chunk</title>`, res2, res3, res4, res5}
-var res2 = `<p style="color:red">message 0</p><br>`
-var res3 = `<p style="color:black">message 1</p><br>`
-var res4 = `<p style="color:blue">message 2</p><br>`
-var res5 = `<p>end</p></html>`
+var ress = []string{`<html><title>Chunk</title>`, `<p style="color:red">message 0</p><br>`, `<p style="color:black">message 1</p><br>`, `<p style="color:blue">message 2</p><br>`, `<p>end</p></html>`}
 
 func handle(c net.Conn) {
 	defer c.Close()
@@ -63,6 +59,7 @@ func handle(c net.Conn) {
 
 	}
 
+	// 暂时不考虑路由
 	_, _, proto, _ := parseRequestLine(string(lineHead))
 	rwc.Writer.Write([]byte(fmt.Sprintf("%s %d %s\r\n", proto, 200, "ok")))
 	rwc.Writer.Write([]byte("Content-type: text/html\r\n"))
