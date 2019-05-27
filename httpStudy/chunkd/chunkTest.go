@@ -81,6 +81,10 @@ func handle(c net.Conn) {
 	rwc.Writer.WriteString(fmt.Sprintf("Expires: %s\r\n", time.Now().Add(1*time.Hour).Format(TimeFormat)))
 	rwc.Writer.WriteString("\r\n")
 	rwc.Writer.Flush()
+
+	// 测试是否还会读取
+	// time.Sleep(2 * time.Second)
+	// rwc.Writer.WriteString("end?")
 }
 
 func main() {
