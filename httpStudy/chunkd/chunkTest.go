@@ -63,20 +63,23 @@ func handle(c net.Conn) {
 
 	// 暂时不考虑路由
 	_, _, proto, _ := parseRequestLine(string(lineHead))
-	rwc.Writer.Write([]byte(fmt.Sprintf("%s %d %s\r\n", proto, 200, "ok")))
-	rwc.Writer.Write([]byte("Content-type: text/html\r\n"))
-	rwc.Writer.Write([]byte("Transfer-Encoding: chunked\r\n"))
-	rwc.Writer.Write([]byte("\r\n"))
+	rwc.Writer.WriteString(fmt.Sprintf("%s %d %s\r\n", proto, 200, "ok"))
+	rwc.Writer.WriteString("Content-type: text/html\r\n")
+	rwc.Writer.WriteString("Transfer-Encoding: chunked\r\n")
+	rwc.Writer.WriteString("Trailer: Expires\r\n")
+	rwc.Writer.WriteString("\r\n")
 
 	rwc.Writer.Flush()
 
 	for _, v := range ress {
-		rwc.Writer.Write([]byte(fmt.Sprintf("%0x\r\n%s\r\n", len(v), v)))
+		rwc.Writer.WriteString(fmt.Sprintf("%0x\r\n%s\r\n", len(v), v))
 		rwc.Writer.Flush()
 		time.Sleep(1 * time.Second)
 	}
 
-	rwc.Writer.Write([]byte(fmt.Sprintf("%0x\r\n\r\n", 0)))
+	rwc.Writer.WriteString(fmt.Sprintf("%0x\r\n", 0))
+	rwc.Writer.WriteString(fmt.Sprintf("Expires: %s\r\n", time.Now().Add(1*time.Hour).Format(TimeFormat)))
+	rwc.Writer.WriteString("\r\n")
 	rwc.Writer.Flush()
 }
 
