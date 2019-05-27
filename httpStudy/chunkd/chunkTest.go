@@ -26,6 +26,8 @@ import (
 // 	textprotoReaderPool.Put(r)
 // }
 
+const TimeFormat = "Mon, 02 Jan 2006 15:04:05 GMT"
+
 func parseRequestLine(line string) (method, requestURI, proto string, ok bool) {
 	s1 := strings.Index(line, " ")
 	s2 := strings.Index(line[s1+1:], " ")
